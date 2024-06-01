@@ -1,18 +1,21 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FirebaseError } from 'firebase/app';
 import { z,ZodType } from 'zod';
 
 import Alert from '../../components/Alert';
 import { loginUser } from '../../services/authorization';
-import { LoginData } from '../../types';
+import { ErrorTypes, LoginData } from '../../types';
 
 const Login = () => {
 
-    const [errorAlert, setErrorAlert] = useState({
+    const navigate = useNavigate();
+
+    const [errorAlert, setErrorAlert] = useState<ErrorTypes>({
         isOpen: false,
+        type: 'danger',
         title: '',
         message: '',
     });
@@ -39,15 +42,18 @@ const Login = () => {
                         console.log('User login');
                         setErrorAlert({
                             isOpen: false,
+                            type: 'danger',
                             title: '',
                             message: '',
                         });
+                        navigate('/dashboard');
                     }
                 } catch (e) {
                     if (e instanceof FirebaseError) {
                         console.error('Authentication error:', e.message);
                         setErrorAlert({
                             isOpen: true,
+                            type: 'danger',
                             title: 'Authentication error',
                             message: e.message,
                         });
@@ -55,6 +61,7 @@ const Login = () => {
                         console.error('An unexpected error occurred:', e);
                         setErrorAlert({
                             isOpen: true,
+                            type: 'danger',
                             title: 'Unexpected error',
                             message: e.message,
                         });
@@ -73,7 +80,7 @@ const Login = () => {
             <section className='login-panel bg-white w-1/2 rounded-l-3xl p-8 flex flex-col justify-evenly'>
                 <h3 className='text-2xl font-bold text-center pt-8'>Log in</h3>
                 <Alert
-                        {...errorAlert}
+                    {...errorAlert}
                 />
                 <form 
                     className='login-form flex flex-col items-center'

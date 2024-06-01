@@ -7,12 +7,13 @@ import { z,ZodType } from 'zod';
 
 import Alert from '../../components/Alert';
 import { registerUser } from '../../services/authorization';
-import { RegisterData } from '../../types';
+import { ErrorTypes, RegisterData } from '../../types';
 
 const Register = () => {
 
-    const [errorAlert, setErrorAlert] = useState({
+    const [errorAlert, setErrorAlert] = useState<ErrorTypes>({
         isOpen: false,
+        type: 'danger',
         title: '',
         message: '',
     });
@@ -48,9 +49,10 @@ const Register = () => {
                     if(registerResult?.user?.uid) {
                         console.log(`User registered ${registerResult.user.uid}`);
                         setErrorAlert({
-                            isOpen: false,
-                            title: '',
-                            message: '',
+                            isOpen: true,
+                            type: 'success',
+                            title: 'User registered',
+                            message: 'You can login now',
                         });
                     }
                 } catch (e) {
@@ -58,6 +60,7 @@ const Register = () => {
                         console.error('Authentication error:', e.message);
                         setErrorAlert({
                             isOpen: true,
+                            type: 'danger',
                             title: 'Authentication error',
                             message: e.message,
                         });
@@ -65,7 +68,8 @@ const Register = () => {
                         console.error('An unexpected error occurred:', e);
                         setErrorAlert({
                             isOpen: true,
-                            title: 'Unexpected error',
+                            type: 'danger',
+                            title: 'Authentication error',
                             message: e.message,
                         });
                       }
@@ -75,6 +79,7 @@ const Register = () => {
     };
 
     return (
+        <>
         <main className='register-section bg-primary h-screen flex flex-row'>
             <section className='register-hero-section w-1/2 flex flex-col p-4 justify-center items-center'>
                 <img src='https://placehold.co/300' alt='logo' />
@@ -162,6 +167,7 @@ const Register = () => {
                 <h4 className='text-center'>Already have an account? <Link to='/' className='font-bold text-primary'>Login here</Link></h4>
             </section>
         </main>
+        </>
     );
 };
 

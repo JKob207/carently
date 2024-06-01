@@ -8,7 +8,18 @@ type RegisterData = LoginData & {
     terms: boolean;
 };
 
+type AlertTypes = 'danger' | 'success';
+
+type ErrorTypes = {
+    isOpen: boolean,
+    type: AlertTypes,
+    title: string,
+    message: string,
+};
+
 export type {
     LoginData,
-    RegisterData
+    RegisterData,
+    AlertTypes,
+    ErrorTypes
 };
