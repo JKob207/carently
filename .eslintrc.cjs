@@ -8,7 +8,7 @@ module.exports = {
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh'],
+  plugins: ['react-refresh', 'simple-import-sort'],
   rules: {
     'react-refresh/only-export-components': [
       'warn',
@@ -24,13 +24,26 @@ module.exports = {
     ],
     'jsx-quotes': [2, 'prefer-single'],
     "comma-dangle": ["error", {
-      "arrays": "always",
-      "objects": "always",
+      "arrays": "only-multiline",
+      "objects": "only-multiline",
       "imports": "never",
       "exports": "never",
-      "functions": "never"
+      "functions": "never",
     }],
     "@typescript-eslint/no-unused-vars" : "off",
     "semi": ["error", "always"],
+    "simple-import-sort/imports": [
+      "error",
+      {
+        "groups": [
+          ["^react", "^@?\\w"],
+          ["^(@|components)(/.*|$)"],
+          ["^\\u0000"],
+          ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
+          ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
+          ["^.+\\.?(css)$"]
+        ]
+      }
+    ]
   },
 }
