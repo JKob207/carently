@@ -3,11 +3,12 @@ import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FirebaseError } from 'firebase/app';
+import typia from 'typia';
 import { z,ZodType } from 'zod';
 
 import Alert from '../../components/Alert';
 import { registerUser } from '../../services/authorization';
-import { ErrorTypes, RegisterData } from '../../types';
+import { ErrorTypes, RegisterData, User } from '../../types';
 
 const Register = () => {
 
@@ -46,15 +47,14 @@ const Register = () => {
             {
                 try {
                     const registerResult = await registerUser(data.email, data.password);
-                    if(registerResult?.user?.uid) {
-                        console.log(`User registered ${registerResult.user.uid}`);
+                    if(typia.is<User>(registerResult)) {
                         setErrorAlert({
                             isOpen: true,
                             type: 'success',
-                            title: 'User registered',
+                            title: 'User registered!',
                             message: 'You can login now',
                         });
-                    }
+                    } else throw Error('Register result error!');
                 } catch (e) {
                     if (e instanceof FirebaseError) {
                         console.error('Authentication error:', e.message);
@@ -86,7 +86,7 @@ const Register = () => {
                 <h2 className='text-lg text-center font-medium text-white'>Lorem ipsum sit dolor ets spiritum ets</h2>
             </section>
             <section className='register-panel bg-white w-1/2 rounded-l-3xl p-8 flex flex-col justify-evenly'>
-                <h3 className='text-2xl font-bold text-center pt-8'>Create account</h3>
+                <h3 className='text-2xl font-bold text-center'>Create account</h3>
                 <Alert
                     {...errorAlert}
                 />

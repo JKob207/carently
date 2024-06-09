@@ -11,6 +11,7 @@ function App() {
       <Route path='register' element={<Register />} />
 
       <Route element={<AuthRequired />}>
+        <Route path='firstLogin' element={<h1>First login</h1>} />
         <Route path='dashboard' element={<h1>Test</h1>} />
       </Route>
     </Route>
