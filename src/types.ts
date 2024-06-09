@@ -8,6 +8,13 @@ type RegisterData = LoginData & {
     terms: boolean;
 };
 
+type FirstLoginData = {
+    name: string;
+    surname: string;
+    company?: string;
+    phone?: string;
+}
+
 type AlertTypes = 'danger' | 'success';
 
 type ErrorTypes = {
@@ -21,6 +28,7 @@ type User = {
     uid: string,
     client_id: string,
     email: string,
+    phone: string,
     name: string,
     surname: string,
     company: string,
@@ -33,6 +41,7 @@ type User = {
 export type {
     LoginData,
     RegisterData,
+    FirstLoginData,
     AlertTypes,
     ErrorTypes,
     User

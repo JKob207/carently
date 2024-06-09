@@ -46,24 +46,24 @@ const Login = () => {
                             title: '',
                             message: '',
                         });
-                        navigate('/dashboard');
+                        navigate('/first-login');
                     }
-                } catch (e) {
-                    if (e instanceof FirebaseError) {
-                        console.error('Authentication error:', e.message);
+                } catch (error) {
+                    if (error instanceof FirebaseError) {
+                        console.error('Authentication error:', error.message);
                         setErrorAlert({
                             isOpen: true,
                             type: 'danger',
                             title: 'Authentication error',
-                            message: e.message,
+                            message: error.message,
                         });
-                      } else if(e instanceof Error) {
-                        console.error('An unexpected error occurred:', e);
+                      } else if(error instanceof Error) {
+                        console.error('An unexpected error occurred:', error);
                         setErrorAlert({
                             isOpen: true,
                             type: 'danger',
                             title: 'Unexpected error',
-                            message: e.message,
+                            message: error.message,
                         });
                       }
                 }

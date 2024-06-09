@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import typia from 'typia';
 
 import { User } from '../types';
@@ -40,4 +40,13 @@ export const getUserById = async (uid: string): Promise<User> => {
     }
 };
 
-getUserById('nmGX8yG8owURXMwgTcEfgvZGVhF3');
+export const updateUser = async (uid: string, newUserData: User) => {
+    const userDoc = doc(db, 'users', uid);
+    try {
+        await updateDoc(userDoc, newUserData);
+        return true;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+};

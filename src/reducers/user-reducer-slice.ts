@@ -1,7 +1,7 @@
 import { createSlice,PayloadAction } from '@reduxjs/toolkit';
 
 import { RootState } from '../store';
-import { User } from '../types';
+import { FirstLoginData, User } from '../types';
 
 export const userSlice = createSlice({
     name: 'user',
@@ -9,6 +9,7 @@ export const userSlice = createSlice({
         uid: '',
         client_id: '',
         email: '',
+        phone: '',
         name: '',
         surname: '',
         company: '',
@@ -22,6 +23,7 @@ export const userSlice = createSlice({
             state.uid = payload.uid;
             state.client_id = payload.uid;
             state.email = payload.email;
+            state.phone = payload.phone;
             state.name = payload.name;
             state.surname = payload.surname;
             state.company = payload.company;
@@ -30,14 +32,29 @@ export const userSlice = createSlice({
             state.payment_card_id = payload.payment_card_id;
             state.payment_info_id = payload.payment_info_id;
         },
+        setExtraLoginUserData(state, {payload}: PayloadAction<FirstLoginData>) {
+            state.name = payload.name;
+            state.surname = payload.surname;
+            state.company = payload.company ?? '';
+            state.phone = payload.phone ?? '';
+        },
     },
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser, setExtraLoginUserData } = userSlice.actions;
 
-export const getUser = (state: RootState) => ({
+export const getUser = (state: RootState): User => ({
     uid: state.user.uid,
+    client_id: state.user.client_id,
     email: state.user.email,
+    phone: state.user.phone,
+    name: state.user.name,
+    surname: state.user.surname,
+    company: state.user.company,
+    current_rent_id: state.user.current_rent_id,
+    favourite_cars: state.user.favourite_cars,
+    payment_card_id: state.user.payment_card_id,
+    payment_info_id: state.user.payment_info_id,
 });
 
 export default userSlice.reducer;
