@@ -12,6 +12,7 @@ const createUserData = async (userCredential: UserCredential): Promise<User> => 
         uid: userCredential.user.uid,
         client_id: generateClientId(userCredential.user.uid),
         email: userCredential.user.email ?? '',
+        phone: '',
         name: '',
         surname: '',
         company: '',

@@ -5,7 +5,7 @@ import { Outlet } from 'react-router-dom';
 const Layout = () => {
     return (
         <div className='flex flex-row h-screen'>
-            <aside className='basis-1/6 border-r-2 border-gray-100 bg-primary text-white font-medium'>
+            <aside className='basis-1/6 border-r-2 border-gray-100 bg-primary text-white font-medium overflow-hidden'>
                 <div className='logo-container py-5 flex justify-center'>
                     <img src='https://placehold.co/75' alt='logo' />
                 </div>
@@ -28,7 +28,7 @@ const Layout = () => {
                     </a>
                 </div>
             </aside>
-            <main className='main-container basis-5/6'>
+            <main className='main-container basis-5/6 overflow-auto'>
                 <Outlet />
             </main>
         </div>

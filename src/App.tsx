@@ -1,6 +1,8 @@
 import { createBrowserRouter, createRoutesFromElements,Route, RouterProvider } from 'react-router-dom';
 
 import AuthRequired from './components/AuthRequired';
+import Layout from './components/Layout';
+import Dashboard from './pages/Dashboard/Dashboard';
 import FirstLogin from './pages/FirstLogin/FirstLogin';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
@@ -13,7 +15,9 @@ function App() {
 
       <Route element={<AuthRequired />}>
         <Route path='first-login' element={<FirstLogin />} />
-        <Route path='dashboard' element={<h1>Test</h1>} />
+        <Route path='dashboard' element={<Layout />}>
+          <Route index element={<Dashboard />} />
+        </Route>
       </Route>
     </Route>
   ));
