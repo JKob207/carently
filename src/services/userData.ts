@@ -9,7 +9,6 @@ export const addUser = async (newUser: User) => {
     try {
         const uid = newUser.uid;
         await setDoc(doc(db, 'users',uid), newUser);
-        console.log('New user added to db!');
     } catch (error) {
         console.error(error);
         throw error;
@@ -25,7 +24,6 @@ export const getUserById = async (uid: string): Promise<User> => {
         {
             const user = {...userSnap.data()};
             if(typia.is<User>(user)) {
-                console.log('OK');
                 return user;
             } else {
                 console.log(user);
