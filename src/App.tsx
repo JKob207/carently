@@ -2,6 +2,7 @@ import { createBrowserRouter, createRoutesFromElements,Route, RouterProvider } f
 
 import AuthRequired from './components/AuthRequired';
 import Layout from './components/Layout';
+import CarsList from './pages/CarsList/CarsList';
 import Dashboard from './pages/Dashboard/Dashboard';
 import FirstLogin from './pages/FirstLogin/FirstLogin';
 import Login from './pages/Login/Login';
@@ -17,6 +18,7 @@ function App() {
         <Route path='first-login' element={<FirstLogin />} />
         <Route path='dashboard' element={<Layout />}>
           <Route index element={<Dashboard />} />
+          <Route path='cars-list' element={<CarsList />} />
         </Route>
       </Route>
     </Route>

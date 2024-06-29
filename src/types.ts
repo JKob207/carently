@@ -1,3 +1,5 @@
+import { GeoPoint } from 'firebase/firestore';
+
 type LoginData = {
     email: string;
     password: string;
@@ -38,11 +40,47 @@ type User = {
     payment_info_id: string,
 };
 
+type Car = {
+    id: string,
+    name: string,
+    brand: string,
+    type: string,
+    year: number,
+    delay_fine: number,
+    doors: number,
+    fuel_type: string,
+    fuel_capacity: string,
+    gearbox: string,
+    mileage: number,
+    pickup_map: GeoPoint,
+    rating: string,
+    seates: number,
+    start_cost: number,
+    cost_per_km: string,
+    thumbnail_image: string,
+};
+
+type Rental = {
+    id: string,
+    car_id: string,
+    user_id: string,
+    date_start: string | Date,
+    date_end: string | Date,
+};
+
+type DatePickerType = {
+    startDate: Date,
+    endDate: Date,
+};
+
 export type {
     LoginData,
     RegisterData,
     FirstLoginData,
     AlertTypes,
     ErrorTypes,
-    User
+    User,
+    Car,
+    DatePickerType,
+    Rental
 };
