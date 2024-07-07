@@ -1,13 +1,26 @@
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
+import { useNavigate } from 'react-router-dom';
 
-import CarCard from '../../components/CarCard';
+import CarsGrid from '../../components/CarsGrid';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
 const Dashboard = () => {
+    const navigator = useNavigate();
+
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date((new Date).setDate((new Date).getDate() + 7)));
+
+    const getMinEndDate = () => {
+        const currentStartDate = new Date(startDate);
+        currentStartDate.setDate(currentStartDate.getDate() + 1);
+        return currentStartDate;
+    };
+
+    const handleSearchCar = () => {
+        navigator('cars-list', { state: { type: 'date-range', startDate: startDate, endDate: endDate } } );
+    };
 
     return (
         <div>
@@ -30,6 +43,7 @@ const Dashboard = () => {
                         <DatePicker
                             className='block w-full p-4 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 placeholder:text-gray-200 placeholder:font-extralight sm:text-sm sm:leading-6'
                             selected={startDate}
+                            minDate={new Date()}
                             onChange={(date: Date) => setStartDate(date)}
                         />
                     </div>
@@ -40,6 +54,7 @@ const Dashboard = () => {
                         <DatePicker
                             className='block w-full p-4 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 placeholder:text-gray-200 placeholder:font-extralight sm:text-sm sm:leading-6'
                             selected={endDate}
+                            minDate={getMinEndDate()}
                             onChange={(date: Date) => setEndDate(date)}
                         />
                     </div>
@@ -47,17 +62,16 @@ const Dashboard = () => {
                 <div className='w-full block text-sm font-medium leading-6 text-dark pt-2 flex items-center justify-center content-center'>
                     <button
                         className='w-3/4 py-2 font-medium text-md text-white bg-secondary rounded-md cursor-pointer'
+                        onClick={handleSearchCar}
                     >Search car</button>
                 </div>
             </div>
             <div className='p-8'>
-                <h3 className='font-semibold text-2xl mt-4'>The most searched cars</h3>
-                <div className='favourite-cars grid gap-4 grid-cols-4 mt-4'>
-                    <CarCard />
-                    <CarCard />
-                    <CarCard />
-                    <CarCard />
-                </div>
+                <h3 className='font-semibold text-2xl mt-4'>The top rented cars</h3>
+                <CarsGrid
+                    type='top-favourite' 
+                    limit={4} 
+                />
             </div>
         </div>
     );
