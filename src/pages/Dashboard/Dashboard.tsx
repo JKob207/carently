@@ -3,6 +3,7 @@ import DatePicker from 'react-datepicker';
 import { useNavigate } from 'react-router-dom';
 
 import CarsGrid from '../../components/CarsGrid';
+import { getMinEndDate } from '../../utils/dateUtils';
 
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -11,12 +12,6 @@ const Dashboard = () => {
 
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date((new Date).setDate((new Date).getDate() + 7)));
-
-    const getMinEndDate = () => {
-        const currentStartDate = new Date(startDate);
-        currentStartDate.setDate(currentStartDate.getDate() + 1);
-        return currentStartDate;
-    };
 
     const handleSearchCar = () => {
         navigator('cars-list', { state: { type: 'date-range', startDate: startDate, endDate: endDate } } );
@@ -54,7 +49,7 @@ const Dashboard = () => {
                         <DatePicker
                             className='block w-full p-4 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 placeholder:text-gray-200 placeholder:font-extralight sm:text-sm sm:leading-6'
                             selected={endDate}
-                            minDate={getMinEndDate()}
+                            minDate={getMinEndDate(startDate)}
                             onChange={(date: Date) => setEndDate(date)}
                         />
                     </div>

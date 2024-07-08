@@ -2,6 +2,7 @@ import { createBrowserRouter, createRoutesFromElements,Route, RouterProvider } f
 
 import AuthRequired from './components/AuthRequired';
 import Layout from './components/Layout';
+import CarPanel from './pages/CarPanel/CarPanel';
 import CarsList from './pages/CarsList/CarsList';
 import Dashboard from './pages/Dashboard/Dashboard';
 import FirstLogin from './pages/FirstLogin/FirstLogin';
@@ -19,6 +20,7 @@ function App() {
         <Route path='dashboard' element={<Layout />}>
           <Route index element={<Dashboard />} />
           <Route path='cars-list' element={<CarsList />} />
+          <Route path='car/:carName' element={<CarPanel />} />
         </Route>
       </Route>
     </Route>

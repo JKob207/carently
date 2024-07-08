@@ -17,6 +17,7 @@
     "classnames": "^2.5.1",
     "eslint-plugin-simple-import-sort": "^12.1.0",
     "firebase": "^10.11.1",
+    "google-map-react": "^2.2.1",
     "postcss": "^8.4.38",
     "react": "^18.2.0",
     "react-datepicker": "^6.9.0",
@@ -31,6 +32,7 @@
   "devDependencies": {
     "@ryoppippi/unplugin-typia": "npm:@jsr/ryoppippi__unplugin-typia@^0.3.4",
     "@types/crypto-js": "^4.2.2",
+    "@types/google-map-react": "^2.1.10",
     "@types/react": "^18.2.66",
     "@types/react-datepicker": "^6.2.0",
     "@types/react-dom": "^18.2.22",
