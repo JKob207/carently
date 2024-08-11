@@ -1,4 +1,4 @@
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, doc, getDocs } from 'firebase/firestore';
 
 import { Car } from '../types';
 
@@ -24,6 +24,26 @@ export const getAllAvailableCars = async (startDate: Date, endDate: Date) => {
         const carsData = await getAllCars();
 
         return carsData.filter((car) => !carsUnavailable.includes(car.id));
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+export const checkIfCarAvailable = async (startDate: Date, endDate: Date, carId: string) => {
+    try {
+        const availableCarsData = await getAllAvailableCars(startDate, endDate);
+        return availableCarsData.filter((car) => car.id === carId ).length !== 0;
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+export const getCarByName = async (name: string) => {
+    try {
+        const carsData = await getAllCars();
+        return carsData.filter((car) => car.name === name)[0];
     } catch (error) {
         console.error(error);
         throw error;

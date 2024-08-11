@@ -61,7 +61,7 @@ type Car = {
 };
 
 type Rental = {
-    id: string,
+    id?: string,
     car_id: string,
     user_id: string,
     date_start: string | Date,
@@ -73,6 +73,12 @@ type DatePickerType = {
     endDate: Date,
 };
 
+type Filters = {
+    brand: string[],
+    type: string[],
+    gearbox: string[],
+};
+
 export type {
     LoginData,
     RegisterData,
@@ -82,5 +88,6 @@ export type {
     User,
     Car,
     DatePickerType,
-    Rental
+    Rental,
+    Filters
 };

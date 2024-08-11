@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 
+import { setCar } from '../reducers/car-reducer-slice';
 import { getAllAvailableCars, getAllCars } from '../services/carsData';
-import { Car } from '../types';
+import { Car, Filters } from '../types';
 
 import CarCard from './CarCard';
 
@@ -11,6 +13,19 @@ const CarsGrid = (props: CarsGridProps) => {
     const [carsData, setCarsData] = useState<Car[]>([]);
 
     const location = useLocation();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const filterCars = () => {
+        const filters = props?.filters || { brand: [], type: [], gearbox: [] };
+
+        return carsData.filter((car) => {
+            return Object.entries(filters).every(([key, values]) => {
+              if (values.length === 0) return true;
+              return values.includes(car[key.toLowerCase() as keyof Car] as unknown as string);
+            });
+          });
+    };
 
     useEffect(() => {
         const fetchTopFavouriteCars = async () => {
@@ -39,11 +54,16 @@ const CarsGrid = (props: CarsGridProps) => {
         
     }, [props.limit, props.type]);
 
+    const handleCarClick = (id: string) => {
+        const carData = carsData.filter((car) => car.id === id)[0];
+        dispatch(setCar(carData));
+        navigate(`/dashboard/car/${carData.name}`);
+    };
+
+    const filteredCarsData = filterCars();
+    const searchedCarsData = filteredCarsData.filter((car: Car) => car.name.toLowerCase().trim().includes(props.searchValue?.toLowerCase()?.trim() ?? ''));
     
-    const filteredCarsData = carsData.filter((car: Car) => car.name.toLowerCase().trim().includes(props.searchValue?.toLowerCase()?.trim() ?? ''));
-    
-    const mapCarsToCards = useMemo(() => filteredCarsData.map((car: Car) => {
-        console.log(car);
+    const mapCarsToCards = useMemo(() => searchedCarsData.map((car: Car) => {
         return (
             <CarCard
                 id={car.id}
@@ -54,9 +74,10 @@ const CarsGrid = (props: CarsGridProps) => {
                 gearbox={car.gearbox}
                 fuel_type={car.fuel_type}
                 thumbnail_image={car.thumbnail_image}
+                click={() => handleCarClick(car.id)}
             />
         );
-    }), [filteredCarsData]);
+    }), [searchedCarsData]);
     
     return (
         <div className='favourite-cars grid gap-4 grid-cols-4 mt-4'>
@@ -69,6 +90,7 @@ type CarsGridProps = {
     type: string,
     limit?: number,
     searchValue?: string,
+    filters?: Filters
 };
 
 export default CarsGrid;
