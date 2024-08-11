@@ -1,30 +1,40 @@
+import { GeoPoint } from 'firebase/firestore';
 import GoogleMapReact from 'google-map-react';
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const AnyReactComponent = (props: any) => <div>{props.text}</div>;
-
-const GoogleMap = () => {
+const GoogleMap = ({ pickupMap }: GoogleMapProps) => {
     const defaultProps = {
         center: {
-          lat: 10.99835602,
-          lng: 77.01502627
+          lat: pickupMap.latitude,
+          lng: pickupMap.longitude
         },
-        zoom: 11
-      };
+        zoom: 15
+    };
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const renderMarkers = (map: any, maps: any) => {
+        const marker = new maps.Marker({
+            position: { lat: pickupMap.latitude, lng: pickupMap.longitude },
+            map,
+            title: 'Hello World!'
+        });
+        return marker;
+    };
 
     return (
         <div style={{ height: '300px', width: '100%' }}>
             <GoogleMapReact
+                bootstrapURLKeys={{key: import.meta.env.VITE_GOOGLE_API_KEY}}
                 defaultCenter={defaultProps.center}
-                defaultZoom={defaultProps.zoom} 
+                defaultZoom={defaultProps.zoom}
+                onGoogleApiLoaded={({map, maps}) => renderMarkers(map, maps)}
             >
-                <AnyReactComponent
-                    lat={59.955413}
-                    lng={30.337844}
-                    text='My Marker' />
             </GoogleMapReact>
         </div>
     );
+};
+
+type GoogleMapProps = {
+    pickupMap: GeoPoint
 };
 
 export default GoogleMap;

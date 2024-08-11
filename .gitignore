@@ -25,3 +25,6 @@ dist-ssr
 
 # Config files
 firebase-config.ts
+
+# Environment files
+.env

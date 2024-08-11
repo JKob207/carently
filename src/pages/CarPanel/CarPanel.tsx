@@ -119,7 +119,9 @@ const CarPanel = () => {
             <div className='lower-panel grid grid-cols-3 gap-6 pt-4'>
                 <div className='pickup-map'>
                     <h2 className='font-medium text-xl pb-2'>Pickup map</h2>
-                    <GoogleMap />
+                    <GoogleMap 
+                        pickupMap={car.pickup_map}
+                    />
                 </div>
                 <div className='biling'>
                     <h2 className='font-medium text-xl'>Biling</h2>
