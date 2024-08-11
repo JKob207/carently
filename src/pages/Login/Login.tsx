@@ -6,6 +6,7 @@ import { FirebaseError } from 'firebase/app';
 import { z,ZodType } from 'zod';
 
 import Alert from '../../components/Alert';
+import { AlertTypes } from '../../enums';
 import { loginUser } from '../../services/authorization';
 import { ErrorTypes, LoginData } from '../../types';
 
@@ -15,7 +16,7 @@ const Login = () => {
 
     const [errorAlert, setErrorAlert] = useState<ErrorTypes>({
         isOpen: false,
-        type: 'danger',
+        type: AlertTypes.danger,
         title: '',
         message: '',
     });
@@ -42,7 +43,7 @@ const Login = () => {
                         console.log('User login');
                         setErrorAlert({
                             isOpen: false,
-                            type: 'danger',
+                            type: AlertTypes.danger,
                             title: '',
                             message: '',
                         });
@@ -53,7 +54,7 @@ const Login = () => {
                         console.error('Authentication error:', error.message);
                         setErrorAlert({
                             isOpen: true,
-                            type: 'danger',
+                            type: AlertTypes.danger,
                             title: 'Authentication error',
                             message: error.message,
                         });
@@ -61,7 +62,7 @@ const Login = () => {
                         console.error('An unexpected error occurred:', error);
                         setErrorAlert({
                             isOpen: true,
-                            type: 'danger',
+                            type: AlertTypes.danger,
                             title: 'Unexpected error',
                             message: error.message,
                         });

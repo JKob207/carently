@@ -7,6 +7,7 @@ import typia from 'typia';
 import { z,ZodType } from 'zod';
 
 import Alert from '../../components/Alert';
+import { AlertTypes } from '../../enums';
 import { registerUser } from '../../services/authorization';
 import { ErrorTypes, RegisterData, User } from '../../types';
 
@@ -14,7 +15,7 @@ const Register = () => {
 
     const [errorAlert, setErrorAlert] = useState<ErrorTypes>({
         isOpen: false,
-        type: 'danger',
+        type: AlertTypes.danger,
         title: '',
         message: '',
     });
@@ -50,7 +51,7 @@ const Register = () => {
                     if(typia.is<User>(registerResult)) {
                         setErrorAlert({
                             isOpen: true,
-                            type: 'success',
+                            type: AlertTypes.success,
                             title: 'User registered!',
                             message: 'You can login now',
                         });
@@ -60,7 +61,7 @@ const Register = () => {
                         console.error('Authentication error:', e.message);
                         setErrorAlert({
                             isOpen: true,
-                            type: 'danger',
+                            type: AlertTypes.danger,
                             title: 'Authentication error',
                             message: e.message,
                         });
@@ -68,7 +69,7 @@ const Register = () => {
                         console.error('An unexpected error occurred:', e);
                         setErrorAlert({
                             isOpen: true,
-                            type: 'danger',
+                            type: AlertTypes.danger,
                             title: 'Authentication error',
                             message: e.message,
                         });

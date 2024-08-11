@@ -1,15 +1,19 @@
 import classNames from 'classnames';
 
-import { AlertTypes } from '../types';
+import { AlertTypes } from '../enums';
 
 const Alert = ({isOpen, type, title, message}: AlertProps) => {
 
-    const dangerClassName = classNames('mt-6 p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400');
-    const successClassName = classNames('mt-6 p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400');
+    const typeClass = classNames({
+        'text-blue-800 bg-blue-50': type === AlertTypes.info,
+        'text-green-800 bg-green-50': type === AlertTypes.success,
+        'text-red-800 bg-red-50':  type === AlertTypes.danger,
+        'text-yellow-800 bg-yellow-50': type === AlertTypes.warning,
+    });
 
     return (
         isOpen ? (
-        <div className={type === 'danger' ? dangerClassName : successClassName} role='alert'>
+        <div className={classNames(typeClass, 'mt-6 p-4 mb-4 text-sm rounded-lg')} role='alert'>
             <span className='font-medium'>{title}</span> {message}
         </div>
         ) : null

@@ -1,5 +1,7 @@
 import { GeoPoint } from 'firebase/firestore';
 
+import { AlertTypes } from './enums';
+
 type LoginData = {
     email: string;
     password: string;
@@ -16,8 +18,6 @@ type FirstLoginData = {
     company?: string;
     phone?: string;
 }
-
-type AlertTypes = 'danger' | 'success';
 
 type ErrorTypes = {
     isOpen: boolean,
@@ -83,7 +83,6 @@ export type {
     LoginData,
     RegisterData,
     FirstLoginData,
-    AlertTypes,
     ErrorTypes,
     User,
     Car,
