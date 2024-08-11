@@ -49,5 +49,13 @@ export const loginUser = async (email: string, password: string): Promise<UserCr
 };
 
 export const logoutUser = async () => {
-    await signOut(auth);
+    try {
+        await signOut(auth);
+    } catch (error) {
+        if (error instanceof FirebaseError) {
+            console.error('Authentication error:', error.message);
+            return error;
+        }
+        throw error;
+    }
 };

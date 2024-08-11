@@ -2,6 +2,8 @@ import { FaCalendarAlt, FaCar, FaUser  } from 'react-icons/fa';
 import { MdLogout } from 'react-icons/md';
 import { Link, Outlet } from 'react-router-dom';
 
+import { logoutUser } from '../services/authorization';
+
 const Layout = () => {
     return (
         <div className='flex flex-row h-screen'>
@@ -24,10 +26,10 @@ const Layout = () => {
                         <FaUser size='50px' />
                         <p className='text-lg'>Profile</p>
                     </a>
-                    <a href='#' className='text-center flex flex-col items-center'>
+                    <button onClick={logoutUser} className='text-center flex flex-col items-center'>
                         <MdLogout size='50px' />
                         <p className='text-lg'>Logout</p>
-                    </a>
+                    </button>
                 </div>
             </aside>
             <main className='main-container basis-5/6 overflow-auto'>
