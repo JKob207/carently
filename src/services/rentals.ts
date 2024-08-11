@@ -1,4 +1,4 @@
-import { collection, getDocs } from 'firebase/firestore';
+import { addDoc, collection, getDocs } from 'firebase/firestore';
 
 import { Rental } from '../types';
 
@@ -21,6 +21,15 @@ export const getUnavailableCarsInRange = async (start: Date, end: Date): Promise
 
             resolve(carsExluded);
         });
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+export const addRentCar = async (newRentalData: Rental) => {
+    try {
+        await addDoc(rentalsCollectionRef, newRentalData);
     } catch (error) {
         console.error(error);
         throw error;

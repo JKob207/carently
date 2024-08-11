@@ -5,24 +5,26 @@ import { useParams } from 'react-router-dom';
 
 import GoogleMap from '../../components/GoogleMap';
 import { getCar } from '../../reducers/car-reducer-slice';
+import { getUser } from '../../reducers/user-reducer-slice';
 import { checkIfCarAvailable, getCarByName } from '../../services/carsData';
+import { addRentCar } from '../../services/rentals';
+import { Rental } from '../../types';
 import { getMinEndDate } from '../../utils/dateUtils';
-
 
 const CarPanel = () => {
     const { carName } = useParams();
     const carData = useSelector(getCar);
-    const [car, setCar] = useState(carData);
+    const userData = useSelector(getUser);
 
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date((new Date).setDate((new Date).getDate() + 7)));
+    const [car, setCar] = useState(carData);
+    const [carAvailable, setCarAvailable] = useState(false);
 
-    const [carAvailable, setCarAvailable] = useState<boolean | undefined>(undefined);
     const rentingButton = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         const checkCarData = async () => {
-            console.log('Checking!');
             if(!car.id) {
                 const carData = await getCarByName(carName ?? '');
                 setCar(carData);
@@ -42,8 +44,19 @@ const CarPanel = () => {
         }
     };
 
-    const rentCar = () => {
-        console.log('Renting...');
+    const rentCar = async () => {
+        const newRental: Rental = {
+            car_id: car.id,
+            user_id: userData.uid,
+            date_start: startDate.toString(),
+            date_end: endDate.toString()
+        };
+
+        try {
+            await addRentCar(newRental);
+        } catch (error) {
+            console.log(error);
+        }
     };
 
     if(!car?.id) {
@@ -127,18 +140,20 @@ const CarPanel = () => {
                     <div className='p-4 bg-secondary rounded-2xl'>
                         <h3 className='text-center text-lg text-white font-bold mb-4'>Rent now</h3>
                         <div>
-                            <div className='flex items-center justify-between py-2'>
-                                <label className='text-white'>Pickup date</label>
+                            <div className='flex flex-col w-full text-sm font-medium leading-6 text-dark pt-6'>
+                                <label htmlFor='date_start' className='block text-white'>Pickup date</label>
                                 <DatePicker
+                                    id='date_start'
                                     className='block w-full p-4 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 placeholder:text-gray-200 placeholder:font-extralight sm:text-sm sm:leading-6'
                                     selected={startDate}
                                     minDate={new Date()}
                                     onChange={(date: Date) => setStartDate(date)}
                                 />
                             </div>
-                            <div className='flex items-center justify-between py-2'>
-                                <label className='text-white'>Drop off date</label>
+                            <div className='flex flex-col w-full text-sm font-medium leading-6 text-dark pt-6'>
+                                <label htmlFor='date_end' className='block text-white'>Drop off date</label>
                                 <DatePicker
+                                    id='date_end'
                                     className='block w-full p-4 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-200 placeholder:text-gray-200 placeholder:font-extralight sm:text-sm sm:leading-6'
                                     selected={endDate}
                                     minDate={getMinEndDate(startDate)}
@@ -149,7 +164,7 @@ const CarPanel = () => {
                         <button 
                             className='w-full py-2 font-medium text-md text-white bg-primary rounded-md cursor-pointer my-4'
                             ref={rentingButton}
-                            onClick={() => typeof carAvailable === 'undefined' ? checkAvailability() : rentCar()}
+                            onClick={() => !carAvailable ? checkAvailability() : rentCar()}
                         >
                             Check availability
                         </button>

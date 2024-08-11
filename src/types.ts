@@ -61,7 +61,7 @@ type Car = {
 };
 
 type Rental = {
-    id: string,
+    id?: string,
     car_id: string,
     user_id: string,
     date_start: string | Date,

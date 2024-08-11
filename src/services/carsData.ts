@@ -33,7 +33,7 @@ export const getAllAvailableCars = async (startDate: Date, endDate: Date) => {
 export const checkIfCarAvailable = async (startDate: Date, endDate: Date, carId: string) => {
     try {
         const availableCarsData = await getAllAvailableCars(startDate, endDate);
-        return Boolean(availableCarsData.filter((car) => car.id === carId ));
+        return availableCarsData.filter((car) => car.id === carId ).length !== 0;
     } catch (error) {
         console.error(error);
         throw error;
