@@ -3,7 +3,9 @@ import DatePicker from 'react-datepicker';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import GoogleMap from '../../components/GoogleMap';
+import Alert from '../../components/Alert';
+import Map from '../../components/Map/Map';
+import { AlertTypes } from '../../enums';
 import { getCar } from '../../reducers/car-reducer-slice';
 import { getUser } from '../../reducers/user-reducer-slice';
 import { checkIfCarAvailable, getCarByName } from '../../services/carsData';
@@ -33,6 +35,13 @@ const CarPanel = () => {
 
         checkCarData();
     }, []);
+
+    useEffect(() => {
+        if (rentingButton?.current) {
+            rentingButton.current.innerText = 'Check availability';
+        }
+        setCarAvailable(false);
+    }, [startDate, endDate]);
     
     const checkAvailability = async () => {
         const isAvailable = await checkIfCarAvailable(startDate, endDate, car.id);
@@ -67,7 +76,7 @@ const CarPanel = () => {
         <div className='py-6 mx-4'>
             <h1 className='text-2xl font-bold py-4'>{car.name}</h1>
             <div className='upper-panel grid grid-cols-3 gap-6'>
-                <img src='https://placehold.co/400x300' alt='car-full' />
+                <img src='https://placehold.co/600x300' alt='car-full' />
                 <div className='car-info-panel'>
                     <div className='flex justify-between border-b-2 my-4'>
                         <p className='font-light'>Mileage</p>
@@ -119,7 +128,9 @@ const CarPanel = () => {
             <div className='lower-panel grid grid-cols-3 gap-6 pt-4'>
                 <div className='pickup-map'>
                     <h2 className='font-medium text-xl pb-2'>Pickup map</h2>
-                    <GoogleMap />
+                    <Map 
+                        markerPoint={car.pickup_map}
+                    />
                 </div>
                 <div className='biling'>
                     <h2 className='font-medium text-xl'>Biling</h2>
@@ -161,6 +172,12 @@ const CarPanel = () => {
                                 />
                             </div>
                         </div>
+                        <Alert 
+                            isOpen={carAvailable}
+                            type={AlertTypes.success}
+                            title='Car is available'
+                            message='You can make a reservation for selected dates'
+                        />
                         <button 
                             className='w-full py-2 font-medium text-md text-white bg-primary rounded-md cursor-pointer my-4'
                             ref={rentingButton}

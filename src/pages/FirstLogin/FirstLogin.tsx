@@ -7,6 +7,7 @@ import { FirebaseError } from 'firebase/app';
 import { z, ZodType } from 'zod';
 
 import Alert from '../../components/Alert';
+import { AlertTypes } from '../../enums';
 import { getUser, setExtraLoginUserData } from '../../reducers/user-reducer-slice';
 import { updateUser } from '../../services/userData';
 import { ErrorTypes, FirstLoginData } from '../../types';
@@ -19,7 +20,7 @@ const FirstLogin = () => {
 
     const [errorAlert, setErrorAlert] = useState<ErrorTypes>({
         isOpen: false,
-        type: 'danger',
+        type: AlertTypes.danger,
         title: '',
         message: '',
     });
@@ -51,18 +52,26 @@ const FirstLogin = () => {
                     dispatch(setExtraLoginUserData(data));
                     setErrorAlert({
                         isOpen: false,
-                        type: 'danger',
+                        type: AlertTypes.danger,
                         title: '',
                         message: '',
                     });
                     navigate('/dashboard');
-                } else throw Error('Update failed!');
+                } else {
+                    setErrorAlert({
+                        isOpen: true,
+                        type: AlertTypes.danger,
+                        title: 'Update error!',
+                        message: 'Try again later',
+                    });
+                    throw Error('Update failed!');
+                }
             } catch (error) {
                 if (error instanceof FirebaseError) {
                     console.error('Firebase error:', error.message);
                     setErrorAlert({
                         isOpen: true,
-                        type: 'danger',
+                        type: AlertTypes.danger,
                         title: 'Authentication error',
                         message: error.message,
                     });
@@ -70,7 +79,7 @@ const FirstLogin = () => {
                     console.error('An unexpected error occurred:', error);
                     setErrorAlert({
                         isOpen: true,
-                        type: 'danger',
+                        type: AlertTypes.danger,
                         title: 'Unexpected error',
                         message: error.message,
                     });
@@ -110,6 +119,7 @@ const FirstLogin = () => {
                                 {...register('name')}
                                 required 
                             />
+                            {errors.name && <span>{errors.name.message}</span>}
                         </div>
                         <div className='first-login-surname-box w-full block text-sm font-medium leading-6 text-dark pt-2'>
                             <label htmlFor='surname'>Last name</label>
@@ -121,6 +131,7 @@ const FirstLogin = () => {
                                 {...register('surname')}
                                 required 
                             />
+                            {errors.surname && <span>{errors.surname.message}</span>}
                         </div>
                         <div className='first-login-company-box w-full block text-sm font-medium leading-6 text-dark pt-2'>
                             <label htmlFor='company'>Company (optional)</label>
@@ -131,6 +142,7 @@ const FirstLogin = () => {
                                 placeholder='Company inc.'
                                 {...register('company')} 
                             />
+                            {errors.company && <span>{errors.company.message}</span>}
                         </div>  
                         <div className='first-login-phone-box w-full block text-sm font-medium leading-6 text-dark pt-2'>
                             <label htmlFor='phone'>Phone number (optional)</label>
@@ -142,6 +154,7 @@ const FirstLogin = () => {
                                 pattern='[0-9]{3}-[0-9]{3}-[0-9]{3}' 
                                 {...register('phone')} 
                             />
+                            {errors.phone && <span>{errors.phone.message}</span>}
                         </div>
                     </div>
                     <input 
