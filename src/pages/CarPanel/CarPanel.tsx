@@ -1,15 +1,16 @@
 import { useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import Alert from '../../components/Alert';
 import Map from '../../components/Map/Map';
 import { AlertTypes } from '../../enums';
 import { getCar } from '../../reducers/car-reducer-slice';
-import { getUser } from '../../reducers/user-reducer-slice';
+import { getUser, setUser } from '../../reducers/user-reducer-slice';
 import { checkIfCarAvailable, getCarByName } from '../../services/carsData';
 import { addRentCar } from '../../services/rentals';
+import { updateUser } from '../../services/userData';
 import { Rental } from '../../types';
 import { getMinEndDate } from '../../utils/dateUtils';
 
@@ -17,6 +18,7 @@ const CarPanel = () => {
     const { carName } = useParams();
     const carData = useSelector(getCar);
     const userData = useSelector(getUser);
+    const dispatch = useDispatch();
 
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date((new Date).setDate((new Date).getDate() + 7)));
@@ -62,7 +64,13 @@ const CarPanel = () => {
         };
 
         try {
-            await addRentCar(newRental);
+            const rental = await addRentCar(newRental);
+            const newUserData = {
+                ...userData,
+                current_rent_id: rental.id
+            };
+            await updateUser(userData.uid, newUserData);
+            dispatch(setUser(newUserData));
         } catch (error) {
             console.log(error);
         }

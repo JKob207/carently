@@ -1,6 +1,6 @@
-export const formatDate = (date: Date): string => {
+export const formatDate = (date: Date | string): string => {
     const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' };
-    return date.toLocaleDateString('en-US', options);
+    return new Date(date).toLocaleDateString('en-GB', options);
 };
 
 export const getMinEndDate = (startDate: Date) => {

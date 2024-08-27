@@ -18,10 +18,10 @@ const Layout = () => {
                         <FaCar size='50px' />
                         <p className='text-lg'>Cars list</p>
                     </Link>
-                    <a href='#' className='text-center flex flex-col items-center'>
+                    <Link to='calendar' className='text-center flex flex-col items-center'>
                         <FaCalendarAlt size='50px' />
                         <p className='text-lg'>Calendar</p>
-                    </a>
+                    </Link>
                     <a href='#' className='text-center flex flex-col items-center'>
                         <FaUser size='50px' />
                         <p className='text-lg'>Profile</p>
