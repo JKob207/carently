@@ -3,7 +3,7 @@ import DatePicker from 'react-datepicker';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
-import GoogleMap from '../../components/GoogleMap';
+import Map from '../../components/Map/Map';
 import { getCar } from '../../reducers/car-reducer-slice';
 import { getUser } from '../../reducers/user-reducer-slice';
 import { checkIfCarAvailable, getCarByName } from '../../services/carsData';
@@ -67,7 +67,7 @@ const CarPanel = () => {
         <div className='py-6 mx-4'>
             <h1 className='text-2xl font-bold py-4'>{car.name}</h1>
             <div className='upper-panel grid grid-cols-3 gap-6'>
-                <img src='https://placehold.co/400x300' alt='car-full' />
+                <img src='https://placehold.co/600x300' alt='car-full' />
                 <div className='car-info-panel'>
                     <div className='flex justify-between border-b-2 my-4'>
                         <p className='font-light'>Mileage</p>
@@ -119,8 +119,8 @@ const CarPanel = () => {
             <div className='lower-panel grid grid-cols-3 gap-6 pt-4'>
                 <div className='pickup-map'>
                     <h2 className='font-medium text-xl pb-2'>Pickup map</h2>
-                    <GoogleMap 
-                        pickupMap={car.pickup_map}
+                    <Map 
+                        markerPoint={car.pickup_map}
                     />
                 </div>
                 <div className='biling'>
