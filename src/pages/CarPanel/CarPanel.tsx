@@ -11,7 +11,7 @@ import { getUser, setUser } from '../../reducers/user-reducer-slice';
 import { checkIfCarAvailable, getCarByName } from '../../services/carsData';
 import { addRentCar } from '../../services/rentals';
 import { updateUser } from '../../services/userData';
-import { Rental } from '../../types';
+import { ErrorTypes, Rental } from '../../types';
 import { getMinEndDate } from '../../utils/dateUtils';
 
 const CarPanel = () => {
@@ -24,6 +24,12 @@ const CarPanel = () => {
     const [endDate, setEndDate] = useState(new Date((new Date).setDate((new Date).getDate() + 7)));
     const [car, setCar] = useState(carData);
     const [carAvailable, setCarAvailable] = useState(false);
+    const [alert, setAlert] = useState<ErrorTypes>({
+        isOpen: false,
+        type: AlertTypes.info,
+        title: '',
+        message: ''
+    });
 
     const rentingButton = useRef<HTMLButtonElement>(null);
 
@@ -46,12 +52,35 @@ const CarPanel = () => {
     }, [startDate, endDate]);
     
     const checkAvailability = async () => {
+        if(userData.current_rent_id.length !== 0) {
+            setAlert({
+                isOpen: true,
+                type: AlertTypes.warning,
+                title: 'You already have a rented car',
+                message: 'Finish current rental first'
+            });
+            return;
+        }
+
         const isAvailable = await checkIfCarAvailable(startDate, endDate, car.id);
 
         setCarAvailable(isAvailable);
 
-        if (rentingButton?.current?.innerText) {
-            rentingButton.current.innerText = isAvailable ? 'Rent' : 'Not available';
+        if(isAvailable) {
+            setAlert({
+                isOpen: true,
+                type: AlertTypes.success,
+                title: 'Car is available',
+                message: 'You can rent now'
+            });
+            if (rentingButton?.current?.innerText) rentingButton.current.innerText = 'Rent';
+        } else {
+            setAlert({
+                isOpen: true,
+                type: AlertTypes.danger,
+                title: 'Car is not available',
+                message: 'Choose different date or car'
+            });
         }
     };
 
@@ -180,12 +209,7 @@ const CarPanel = () => {
                                 />
                             </div>
                         </div>
-                        <Alert 
-                            isOpen={carAvailable}
-                            type={AlertTypes.success}
-                            title='Car is available'
-                            message='You can make a reservation for selected dates'
-                        />
+                        <Alert {...alert} />
                         <button 
                             className='w-full py-2 font-medium text-md text-white bg-primary rounded-md cursor-pointer my-4'
                             ref={rentingButton}
