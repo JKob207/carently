@@ -3,16 +3,27 @@ import { FaCalendarCheck, FaCar } from 'react-icons/fa';
 import { FaCalendarXmark } from 'react-icons/fa6';
 import { useSelector } from 'react-redux';
 
+import RentalSchedulerMenager from '../../components/RentalScheduler/RentalSchedulerMenager';
+import useGetRentalsEvents from '../../components/RentalScheduler/useGetRentalsEvents';
 import { getUser } from '../../reducers/user-reducer-slice';
 import { getCarById } from '../../services/carsData';
 import { getRentalById } from '../../services/rentals';
-import { Car, Rental } from '../../types';
+import { Car, Rental, RentEvent } from '../../types';
 import { formatDate } from '../../utils/dateUtils';
 
 const Calendar = () => {
     const userData = useSelector(getUser);
     const [currentRent, setCurrentRent] = useState<Rental>();
     const [currentCar, setCurrentCar] = useState<Car>();
+    const [userEvents, setUserEvents] = useState<RentEvent[]>([]);
+
+    const { rentalsEvents, isLoading } = useGetRentalsEvents();
+
+    useEffect(() => {
+        if(!isLoading) {
+            setUserEvents(rentalsEvents);
+        }
+    }, [isLoading, rentalsEvents]);
     
     useEffect(() => {
         const getCurrentRental = async () => {
@@ -66,6 +77,7 @@ const Calendar = () => {
                 }
             </div>
             <hr className='my-8 h-0.5 border-t-0 bg-neutral-200 dark:bg-white/10' />
+            <RentalSchedulerMenager events={userEvents} />
        </div>
     );
 };

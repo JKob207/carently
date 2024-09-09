@@ -13,6 +13,7 @@
   "dependencies": {
     "@hookform/resolvers": "^3.4.2",
     "@reduxjs/toolkit": "^2.2.5",
+    "@schedule-x/calendar": "^1.63.0",
     "@schedule-x/react": "^1.58.2",
     "@schedule-x/theme-default": "^1.59.1",
     "autoprefixer": "^10.4.19",

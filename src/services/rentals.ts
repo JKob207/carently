@@ -59,3 +59,15 @@ export const getRentalById = async (rentalId: string) => {
         throw error;
     }
 };
+
+export const getUserRentals = async (userId: string) => {
+    try {
+        const data = await getDocs(rentalsCollectionRef);
+        const rentalsMap = data.docs.map(doc => ({...doc.data(), id: doc.id} as Rental));
+
+        return rentalsMap.filter((rental) => rental.user_id === userId);
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
