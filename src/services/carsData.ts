@@ -1,4 +1,5 @@
-import { collection, doc, getDocs } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
+import typia from 'typia';
 
 import { Car } from '../types';
 
@@ -44,6 +45,29 @@ export const getCarByName = async (name: string) => {
     try {
         const carsData = await getAllCars();
         return carsData.filter((car) => car.name === name)[0];
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+};
+
+export const getCarById = async (carId: string): Promise<Car> => {
+    try {
+        const carRef = await doc(db, 'cars', carId);
+        const carSnap = await getDoc(carRef);
+        
+        if(carSnap.exists())
+        {
+            const car = {...carSnap.data(), id: carId};
+            if(typia.is<Car>(car)) {
+                return car;
+            } else {
+                console.log(car);
+                throw Error('Wrong car data!');
+            }
+        }else {
+            throw Error('No car found!');
+        }
     } catch (error) {
         console.error(error);
         throw error;

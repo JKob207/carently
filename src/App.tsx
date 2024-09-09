@@ -2,6 +2,7 @@ import { createBrowserRouter, createRoutesFromElements,Route, RouterProvider } f
 
 import AuthRequired from './components/AuthRequired';
 import Layout from './components/Layout';
+import Calendar from './pages/Calendar/Calendar';
 import CarPanel from './pages/CarPanel/CarPanel';
 import CarsList from './pages/CarsList/CarsList';
 import Dashboard from './pages/Dashboard/Dashboard';
@@ -21,6 +22,7 @@ function App() {
           <Route index element={<Dashboard />} />
           <Route path='cars-list' element={<CarsList />} />
           <Route path='car/:carName' element={<CarPanel />} />
+          <Route path='calendar' element={<Calendar />} />
         </Route>
       </Route>
     </Route>

@@ -79,6 +79,13 @@ type Filters = {
     gearbox: string[],
 };
 
+type RentEvent = {
+    id: string,
+    title: string,
+    start: string,
+    end: string
+};
+
 export type {
     LoginData,
     RegisterData,
@@ -88,5 +95,6 @@ export type {
     Car,
     DatePickerType,
     Rental,
-    Filters
+    Filters,
+    RentEvent
 };

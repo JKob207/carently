@@ -1,27 +1,35 @@
 import { useEffect, useRef, useState } from 'react';
 import DatePicker from 'react-datepicker';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 
 import Alert from '../../components/Alert';
 import Map from '../../components/Map/Map';
 import { AlertTypes } from '../../enums';
 import { getCar } from '../../reducers/car-reducer-slice';
-import { getUser } from '../../reducers/user-reducer-slice';
+import { getUser, setUser } from '../../reducers/user-reducer-slice';
 import { checkIfCarAvailable, getCarByName } from '../../services/carsData';
 import { addRentCar } from '../../services/rentals';
-import { Rental } from '../../types';
+import { updateUser } from '../../services/userData';
+import { ErrorTypes, Rental } from '../../types';
 import { getMinEndDate } from '../../utils/dateUtils';
 
 const CarPanel = () => {
     const { carName } = useParams();
     const carData = useSelector(getCar);
     const userData = useSelector(getUser);
+    const dispatch = useDispatch();
 
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date((new Date).setDate((new Date).getDate() + 7)));
     const [car, setCar] = useState(carData);
     const [carAvailable, setCarAvailable] = useState(false);
+    const [alert, setAlert] = useState<ErrorTypes>({
+        isOpen: false,
+        type: AlertTypes.info,
+        title: '',
+        message: ''
+    });
 
     const rentingButton = useRef<HTMLButtonElement>(null);
 
@@ -44,12 +52,35 @@ const CarPanel = () => {
     }, [startDate, endDate]);
     
     const checkAvailability = async () => {
+        if(userData.current_rent_id.length !== 0) {
+            setAlert({
+                isOpen: true,
+                type: AlertTypes.warning,
+                title: 'You already have a rented car',
+                message: 'Finish current rental first'
+            });
+            return;
+        }
+
         const isAvailable = await checkIfCarAvailable(startDate, endDate, car.id);
 
         setCarAvailable(isAvailable);
 
-        if (rentingButton?.current?.innerText) {
-            rentingButton.current.innerText = isAvailable ? 'Rent' : 'Not available';
+        if(isAvailable) {
+            setAlert({
+                isOpen: true,
+                type: AlertTypes.success,
+                title: 'Car is available',
+                message: 'You can rent now'
+            });
+            if (rentingButton?.current?.innerText) rentingButton.current.innerText = 'Rent';
+        } else {
+            setAlert({
+                isOpen: true,
+                type: AlertTypes.danger,
+                title: 'Car is not available',
+                message: 'Choose different date or car'
+            });
         }
     };
 
@@ -62,7 +93,13 @@ const CarPanel = () => {
         };
 
         try {
-            await addRentCar(newRental);
+            const rental = await addRentCar(newRental);
+            const newUserData = {
+                ...userData,
+                current_rent_id: rental.id
+            };
+            await updateUser(userData.uid, newUserData);
+            dispatch(setUser(newUserData));
         } catch (error) {
             console.log(error);
         }
@@ -172,12 +209,7 @@ const CarPanel = () => {
                                 />
                             </div>
                         </div>
-                        <Alert 
-                            isOpen={carAvailable}
-                            type={AlertTypes.success}
-                            title='Car is available'
-                            message='You can make a reservation for selected dates'
-                        />
+                        <Alert {...alert} />
                         <button 
                             className='w-full py-2 font-medium text-md text-white bg-primary rounded-md cursor-pointer my-4'
                             ref={rentingButton}
