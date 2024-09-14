@@ -1,14 +1,14 @@
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { PaymentTypes } from '../../enums';
 import { getUser } from '../../reducers/user-reducer-slice';
 import { getCarById } from '../../services/carsData';
-import { addPayment } from '../../services/payments';
+import { addPayment, getPaymentHistoryForUserById } from '../../services/payments';
 import { getRentalById } from '../../services/rentals';
 import { updateUser } from '../../services/userData';
-import { Car, Payment, Rental, User } from '../../types';
+import { Car, GroupedPayments, Payment, Rental, User } from '../../types';
 import { formatDate } from '../../utils/dateUtils';
 
 const UserPanel = () => {
@@ -16,8 +16,28 @@ const UserPanel = () => {
 
     const [currentRent, setCurrentRent] = useState<Rental>();
     const [currentCar, setCurrentCar] = useState<Car>();
+    const [paymentHistoryMonths, setPaymentHistoryMonths] = useState<string[]>();
+    const [paymentHistory, setPaymentHistory] = useState<GroupedPayments>();
+    const [monthRentCost, setMonthRentCost] = useState(0);
+    const [monthFineCost, setMonthFineCost] = useState(0);
 
     const navigate = useNavigate();
+
+    const sumMonthPrice = (selectedMonth: string) => {
+        if(!paymentHistory) return; 
+        const monthData = paymentHistory[selectedMonth];
+        
+        const rentSum = monthData
+          .filter((payment) => payment.type === PaymentTypes.rent)
+          .reduce((acc, payment) => acc + parseFloat(payment.price), 0);
+  
+          const fineSum = monthData
+              .filter((payment) => payment.type === PaymentTypes.fine)
+              .reduce((acc, payment) => acc + parseFloat(payment.price), 0);
+  
+          setMonthRentCost(rentSum);
+          setMonthFineCost(fineSum);
+    };
 
     useEffect(() => {
         const getCurrentRental = async () => {
@@ -37,6 +57,29 @@ const UserPanel = () => {
         }
     }, []);
 
+    useEffect(() => {
+        const getPaymentHistory = async () => {
+            if(!userData.uid) return;
+
+            try {
+                const paymentData = await getPaymentHistoryForUserById(userData.uid);
+                
+                setPaymentHistoryMonths(Object.keys(paymentData));
+                setPaymentHistory(paymentData);
+            } catch (error) {
+                console.error(error);
+                return;
+            }
+        };
+
+        getPaymentHistory();
+    }, []);
+
+    useEffect(() => {
+        if(!paymentHistoryMonths) return;
+        sumMonthPrice(paymentHistoryMonths[0]);
+    }, [paymentHistoryMonths]);
+
     const endRent = async () => {
         if(!currentRent?.car_id || !currentCar?.id) return;
 
@@ -51,7 +94,7 @@ const UserPanel = () => {
 
         const payment: Payment = {
             user_id: userData.uid,
-            date: new Date(),
+            date: new Date().toString(),
             price: rentPrice.toString(),
             type: PaymentTypes.rent
         };
@@ -65,7 +108,7 @@ const UserPanel = () => {
         if(endDate.getTime() > new Date(currentRent.date_end).getTime()) {
             const fine: Payment = {
                 user_id: userData.uid,
-                date: new Date(),
+                date: new Date().toString(),
                 price: currentCar.delay_fine.toString(),
                 type: PaymentTypes.fine
             };
@@ -90,6 +133,13 @@ const UserPanel = () => {
             console.error(error);
         }
     };
+
+    const changePaymentHistory = (event: ChangeEvent<HTMLSelectElement>) => {
+      const selectedMonth = event.target.value;
+      sumMonthPrice(selectedMonth);
+    };
+
+    const paymentHistoryMonthsOptions = useMemo(() => paymentHistoryMonths?.map((month) => <option value={month}>{month}</option>), [paymentHistoryMonths]);
 
     return (
         <div className='m-12'>
@@ -126,17 +176,20 @@ const UserPanel = () => {
                 <div className='w-1/3'>
                     <div className='flex justify-between mb-8'>
                         <h3 className='font-semibold text-2xl'>Payment history</h3>
-                        <select className='py-2 px-6 border border-gray-300 rounded-lg bg-gray-50 font-medium'>
-                            <option>May</option>
+                        <select 
+                            className='py-2 px-6 border border-gray-300 rounded-lg bg-gray-50 font-medium'
+                            onChange={changePaymentHistory}
+                        >
+                            {paymentHistoryMonthsOptions}
                         </select>
                     </div>
                     <div className='flex justify-between border-b-2 border-gray-200 mb-6'>
                         <p className='font-light'>Rent</p>
-                        <p className='font-semibold'>130 $</p>
+                        <p className='font-semibold'>{monthRentCost}$</p>
                     </div>
                     <div className='flex justify-between border-b-2 border-gray-200'>
                         <p className='font-light'>Fines</p>
-                        <p className='font-semibold'>0$</p>
+                        <p className='font-semibold'>{monthFineCost}$</p>
                     </div>
                 </div>
             </div>

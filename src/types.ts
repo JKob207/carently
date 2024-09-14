@@ -88,10 +88,14 @@ type RentEvent = {
 
 type Payment = {
     id?: string,
-    date: Date,
+    date: Date | string,
     price: string,
     type: PaymentTypes,
     user_id: string,
+};
+
+type GroupedPayments = {
+    [key: string]: Payment[];
 };
 
 export type {
@@ -105,5 +109,6 @@ export type {
     Rental,
     Filters,
     RentEvent,
-    Payment
+    Payment,
+    GroupedPayments
 };
