@@ -69,7 +69,7 @@ const CarsGrid = (props: CarsGridProps) => {
                 id={car.id}
                 name={car.name}
                 year={car.year}
-                cost_per_km={car.cost_per_km}
+                cost_per_day={car.cost_per_day}
                 mileage={car.mileage}
                 gearbox={car.gearbox}
                 fuel_type={car.fuel_type}

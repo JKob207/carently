@@ -22,10 +22,10 @@ const Layout = () => {
                         <FaCalendarAlt size='50px' />
                         <p className='text-lg'>Calendar</p>
                     </Link>
-                    <a href='#' className='text-center flex flex-col items-center'>
+                    <Link to='user-panel' className='text-center flex flex-col items-center'>
                         <FaUser size='50px' />
                         <p className='text-lg'>Profile</p>
-                    </a>
+                    </Link>
                     <button onClick={logoutUser} className='text-center flex flex-col items-center'>
                         <MdLogout size='50px' />
                         <p className='text-lg'>Logout</p>

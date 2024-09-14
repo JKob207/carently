@@ -1,6 +1,6 @@
 import { GeoPoint } from 'firebase/firestore';
 
-import { AlertTypes } from './enums';
+import { AlertTypes, PaymentTypes } from './enums';
 
 type LoginData = {
     email: string;
@@ -56,7 +56,7 @@ type Car = {
     rating: string,
     seates: number,
     start_cost: number,
-    cost_per_km: string,
+    cost_per_day: string,
     thumbnail_image: string,
 };
 
@@ -86,6 +86,14 @@ type RentEvent = {
     end: string
 };
 
+type Payment = {
+    id?: string,
+    date: Date,
+    price: string,
+    type: PaymentTypes,
+    user_id: string,
+};
+
 export type {
     LoginData,
     RegisterData,
@@ -96,5 +104,6 @@ export type {
     DatePickerType,
     Rental,
     Filters,
-    RentEvent
+    RentEvent,
+    Payment
 };

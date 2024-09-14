@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import FirstLogin from './pages/FirstLogin/FirstLogin';
 import Login from './pages/Login/Login';
 import Register from './pages/Register/Register';
+import UserPanel from './pages/UserPanel/UserPanel';
 
 function App() {
   const router = createBrowserRouter(createRoutesFromElements(
@@ -23,6 +24,7 @@ function App() {
           <Route path='cars-list' element={<CarsList />} />
           <Route path='car/:carName' element={<CarPanel />} />
           <Route path='calendar' element={<Calendar />} />
+          <Route path='user-panel' element={<UserPanel />} />
         </Route>
       </Route>
     </Route>

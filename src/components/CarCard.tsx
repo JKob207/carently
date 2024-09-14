@@ -39,7 +39,7 @@ const CarCard = (props: CarCardProps) => {
                                 <span className='font-semibold'>{props.name}</span>
                                 <sup className='text-gray-400 text-sm'>{props.year}</sup>
                             </div>
-                            <span className='font-semibold'>${props.cost_per_km} / km</span>
+                            <span className='font-semibold'>${props.cost_per_day} / day</span>
                         </div>
                         <div className='flex justify-around'>
                             <div className='flex flex-col items-center'>
@@ -66,7 +66,7 @@ type CarCardProps = {
     id: string,
     name: string,
     year: number,
-    cost_per_km: string,
+    cost_per_day: string,
     mileage: number,
     gearbox: string,
     fuel_type: string,

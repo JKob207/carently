@@ -4,3 +4,8 @@ export enum AlertTypes {
     'danger',
     'success',
 }
+
+export enum PaymentTypes {
+    'rent' = 'rent',
+    'fine' = 'fine'
+}
