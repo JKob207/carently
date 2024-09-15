@@ -1,14 +1,22 @@
 import { useEffect, useState } from 'react';
 import { BsSpeedometer2 } from 'react-icons/bs';
-import { CiHeart } from 'react-icons/ci';
+import { IoMdHeart, IoMdHeartEmpty } from 'react-icons/io';
 import { PiSteeringWheel } from 'react-icons/pi';
 import { TbGasStation } from 'react-icons/tb';
+import { useDispatch, useSelector } from 'react-redux';
 
+import { getUser, setUser } from '../reducers/user-reducer-slice';
 import { getImage } from '../services/storageAPI';
+import { updateUser } from '../services/userData';
 
 const CarCard = (props: CarCardProps) => {
 
+    const userData = useSelector(getUser);
+
+    const dispatch = useDispatch();
+
     const [cardThumbnail, setCardThumbnail] = useState('');
+    const [isCurrentFavourite, setIsCurrentFavourite] = useState(false);
 
     useEffect(() => {
         const getThumbnail = async () => {
@@ -19,14 +27,51 @@ const CarCard = (props: CarCardProps) => {
         getThumbnail();
     }, [props.thumbnail_image]);
 
+    useEffect(() => {
+        const currentFavourite = userData.favourite_cars;
+
+        const isCurrentFavourite = Boolean(currentFavourite.find((carId) => carId === props.id));
+
+        setIsCurrentFavourite(isCurrentFavourite);
+    }, [props.id, userData.favourite_cars]);
+
+    const changeFavouriteCar = async () => {
+        let newFavouriteArr = [...userData.favourite_cars];
+
+        if(isCurrentFavourite) {
+            newFavouriteArr = userData.favourite_cars.filter((carId) => carId !== props.id);
+        } else {
+            console.log(newFavouriteArr);
+            newFavouriteArr.push(props.id);
+        }
+
+        const updatedUser = {
+            ...userData,
+            favourite_cars: newFavouriteArr
+        };
+
+        await updateUser(userData.uid, updatedUser);
+        dispatch(setUser(updatedUser));
+        setIsCurrentFavourite((prev) => !prev);
+    };
+
     return (
         <div
             className='car-card block bg-gray-100 border border-gray-200 rounded-lg shadow sm:p-6 md:p-4 dark:bg-gray-800 dark:border-gray-700'
         >
-            <div className='favourite-car-icon relative left-[90%] bottom-[2%] w-min'>
-                <CiHeart
-                    size='20px'
-                />
+            <div className='favourite-car-icon relative left-[90%] bottom-[2%] w-min cursor-pointer' onClick={changeFavouriteCar}>
+                {
+                    isCurrentFavourite ? (
+                        <IoMdHeart
+                            size='20px'
+                            color='red'
+                        />
+                    ) : (
+                        <IoMdHeartEmpty
+                            size='20px'
+                        />
+                    )
+                }
             </div>
             <div className='hover:cursor-pointer'  onClick={props.click}>
                 <div className='car-image flex justify-center'>

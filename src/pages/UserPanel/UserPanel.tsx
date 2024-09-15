@@ -2,6 +2,7 @@ import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
+import CarsGrid from '../../components/CarsGrid';
 import { PaymentTypes } from '../../enums';
 import { getUser } from '../../reducers/user-reducer-slice';
 import { getCarById } from '../../services/carsData';
@@ -196,6 +197,11 @@ const UserPanel = () => {
             <hr/>
             <div className='mt-4'>
                 <h3 className='font-semibold text-2xl'>Favourite cars</h3>
+                <div>
+                    <CarsGrid 
+                        type='favourite'
+                    />
+                </div>
             </div>
         </div>
     );
