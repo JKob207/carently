@@ -75,8 +75,8 @@ const Login = () => {
     return (
         <main className='login-section bg-primary h-screen flex flex-row'>
             <section className='login-hero-section w-1/2 flex flex-col p-4 justify-center items-center'>
-                <img src='https://placehold.co/300' alt='logo' />
-                <h2 className='text-lg text-center font-medium text-white'>Lorem ipsum sit dolor ets spiritum ets</h2>
+                <img className='pb-4' src='https://firebasestorage.googleapis.com/v0/b/carently-94153.appspot.com/o/assets%2FCarently_logo_white_cropped.png?alt=media&token=d55f06bc-1e4d-445f-979f-96c3d9f45f63' alt='logo' />
+                <h2 className='text-lg text-center font-medium text-white'>New way of car renting</h2>
             </section>
             <section className='login-panel bg-white w-1/2 rounded-l-3xl p-8 flex flex-col justify-evenly'>
                 <h3 className='text-2xl font-bold text-center pt-8'>Log in</h3>

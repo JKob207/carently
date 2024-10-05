@@ -58,6 +58,7 @@ type Car = {
     start_cost: number,
     cost_per_day: string,
     thumbnail_image: string,
+    preview_image: string,
 };
 
 type Rental = {

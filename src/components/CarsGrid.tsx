@@ -91,7 +91,11 @@ const CarsGrid = (props: CarsGridProps) => {
     
     return (
         <div className='favourite-cars grid gap-4 grid-cols-4 mt-4'>
-            {mapCarsToCards}
+            {
+                mapCarsToCards.length === 0 ? (
+                    <div>No cars data</div>
+                ) : mapCarsToCards
+            }
         </div>
     );
 };

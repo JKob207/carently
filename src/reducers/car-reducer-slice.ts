@@ -23,6 +23,7 @@ export const carSlice = createSlice({
         start_cost: 0,
         cost_per_day: '',
         thumbnail_image: '',
+        preview_image: '',
     } as Car,
     reducers: {
         setCar(state, { payload }: PayloadAction<Car>) {
@@ -43,6 +44,7 @@ export const carSlice = createSlice({
             state.start_cost = payload.start_cost;
             state.cost_per_day = payload.cost_per_day;
             state.thumbnail_image = payload.thumbnail_image;
+            state.preview_image = payload.preview_image;
         }
     }
 });
@@ -67,6 +69,7 @@ export const getCar = (state: RootState): Car => ({
     start_cost: state.car.start_cost,
     cost_per_day: state.car.cost_per_day,
     thumbnail_image: state.car.thumbnail_image,
+    preview_image: state.car.preview_image
 });
 
 export default carSlice.reducer;

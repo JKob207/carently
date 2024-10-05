@@ -9,8 +9,8 @@ const Layout = () => {
         <div className='flex flex-row h-screen'>
             <aside className='basis-1/6 border-r-2 border-gray-100 bg-primary text-white font-medium overflow-hidden'>
                 <Link to='/dashboard'>
-                    <div className='logo-container py-5 flex justify-center'>
-                        <img src='https://placehold.co/75' alt='logo' />
+                    <div className='logo-container pt-7 pb-2 flex justify-center'>
+                        <img className='w-[75px]' src='https://firebasestorage.googleapis.com/v0/b/carently-94153.appspot.com/o/assets%2FCarently_logo_white_cropped.png?alt=media&token=d55f06bc-1e4d-445f-979f-96c3d9f45f63' alt='logo' />
                     </div>
                 </Link>
                 <div className='menu h-4/5 flex flex-col justify-evenly'>
