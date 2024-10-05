@@ -59,6 +59,7 @@ export const getCarById = async (carId: string): Promise<Car> => {
         if(carSnap.exists())
         {
             const car = {...carSnap.data(), id: carId};
+            
             if(typia.is<Car>(car)) {
                 return car;
             } else {

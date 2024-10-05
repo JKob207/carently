@@ -9,7 +9,7 @@ const RentalSchedulerMenager = (props: RentalSchedulerMenagerProps) => {
 
     return (
         <div>
-            <RentalScheduler events={props.events}/>;
+            <RentalScheduler events={props.events}/>
         </div>
     );
 };

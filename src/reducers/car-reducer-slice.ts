@@ -21,7 +21,7 @@ export const carSlice = createSlice({
         rating: '',
         seates: 0,
         start_cost: 0,
-        cost_per_km: '',
+        cost_per_day: '',
         thumbnail_image: '',
     } as Car,
     reducers: {
@@ -41,7 +41,7 @@ export const carSlice = createSlice({
             state.rating = payload.rating;
             state.seates = payload.seates;
             state.start_cost = payload.start_cost;
-            state.cost_per_km = payload.cost_per_km;
+            state.cost_per_day = payload.cost_per_day;
             state.thumbnail_image = payload.thumbnail_image;
         }
     }
@@ -65,7 +65,7 @@ export const getCar = (state: RootState): Car => ({
     rating: state.car.rating,
     seates: state.car.seates,
     start_cost: state.car.start_cost,
-    cost_per_km: state.car.cost_per_km,
+    cost_per_day: state.car.cost_per_day,
     thumbnail_image: state.car.thumbnail_image,
 });
 

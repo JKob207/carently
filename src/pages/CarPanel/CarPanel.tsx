@@ -176,8 +176,8 @@ const CarPanel = () => {
                         <p className='font-semibold'>{car.start_cost} $</p>
                     </div>
                     <div className='flex justify-between border-b-2 my-4'>
-                        <p className='font-light'>Cost per km</p>
-                        <p className='font-semibold'>{car.cost_per_km} $</p>
+                        <p className='font-light'>Cost per day</p>
+                        <p className='font-semibold'>{car.cost_per_day} $</p>
                     </div>
                     <div className='flex justify-between border-b-2 my-4'>
                         <p className='font-light'>Delay fine</p>

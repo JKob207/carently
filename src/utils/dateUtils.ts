@@ -1,5 +1,7 @@
+import { GroupedPayments, Payment } from '../types';
+
 export const formatDate = (date: Date | string): string => {
-    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long' };
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
     return new Date(date).toLocaleDateString('en-GB', options);
 };
 
@@ -19,4 +21,20 @@ export const formatEventDate = (eventDate: string | Date): string => {
     const minutes = String(date.getMinutes()).padStart(2, '0');
 
     return `${year}-${month}-${day} ${hours}:${minutes}`;
+};
+
+const parseMonthYear = (key: string): Date => {
+    const [month, year] = key.split(' ');
+    return new Date(`${month} 1, ${year}`);
+};
+
+export const sortPaymentsByMonthYear = (payments: GroupedPayments) => {
+    const sortedEntries = Object.entries(payments)
+    .sort(([keyA], [keyB]) => {
+      const dateA = parseMonthYear(keyA);
+      const dateB = parseMonthYear(keyB);
+      return dateA.getTime() - dateB.getTime();
+    });
+
+  return Object.fromEntries(sortedEntries);
 };

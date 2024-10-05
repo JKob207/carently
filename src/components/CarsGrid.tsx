@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { setCar } from '../reducers/car-reducer-slice';
+import { getUser } from '../reducers/user-reducer-slice';
 import { getAllAvailableCars, getAllCars } from '../services/carsData';
 import { Car, Filters } from '../types';
 
@@ -10,6 +11,8 @@ import CarCard from './CarCard';
 
 const CarsGrid = (props: CarsGridProps) => {
     
+    const userData = useSelector(getUser);
+
     const [carsData, setCarsData] = useState<Car[]>([]);
 
     const location = useLocation();
@@ -46,13 +49,20 @@ const CarsGrid = (props: CarsGridProps) => {
             setCarsData(carsData);
         };
 
+        const fetchFavouriteCars = async () => {
+            const carsData = await getAllCars();
+            const favouriteCars = carsData.filter((car) => userData.favourite_cars.includes(car.id));
+            setCarsData(favouriteCars);
+        };
+
         switch(props.type) {
             case 'list': fetchCarsList(); break;
             case 'date-range': fetchAvailableCars(); break;
             case 'top-favourite': fetchTopFavouriteCars(); break;
+            case 'favourite': fetchFavouriteCars(); break;
         }
         
-    }, [props.limit, props.type]);
+    }, [props.limit, props.type, userData.favourite_cars]);
 
     const handleCarClick = (id: string) => {
         const carData = carsData.filter((car) => car.id === id)[0];
@@ -69,7 +79,7 @@ const CarsGrid = (props: CarsGridProps) => {
                 id={car.id}
                 name={car.name}
                 year={car.year}
-                cost_per_km={car.cost_per_km}
+                cost_per_day={car.cost_per_day}
                 mileage={car.mileage}
                 gearbox={car.gearbox}
                 fuel_type={car.fuel_type}
