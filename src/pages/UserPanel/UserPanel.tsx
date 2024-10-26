@@ -8,6 +8,7 @@ import { getUser } from '../../reducers/user-reducer-slice';
 import { getCarById } from '../../services/carsData';
 import { addPayment, getPaymentHistoryForUserById } from '../../services/payments';
 import { getRentalById } from '../../services/rentals';
+import { getImage } from '../../services/storageAPI';
 import { updateUser } from '../../services/userData';
 import { Car, GroupedPayments, Payment, Rental, User } from '../../types';
 import { formatDate } from '../../utils/dateUtils';
@@ -21,6 +22,7 @@ const UserPanel = () => {
     const [paymentHistory, setPaymentHistory] = useState<GroupedPayments>();
     const [monthRentCost, setMonthRentCost] = useState(0);
     const [monthFineCost, setMonthFineCost] = useState(0);
+    const [carPreviewImage, setCarPreviewImage] = useState('https://firebasestorage.googleapis.com/v0/b/carently-94153.appspot.com/o/assets%2Fempty_current.png?alt=media&token=900bdd85-63ee-4bdb-89f1-93990d8fb1f1');
 
     const navigate = useNavigate();
 
@@ -29,15 +31,15 @@ const UserPanel = () => {
         const monthData = paymentHistory[selectedMonth];
         
         const rentSum = monthData
-          .filter((payment) => payment.type === PaymentTypes.rent)
-          .reduce((acc, payment) => acc + parseFloat(payment.price), 0);
+          ?.filter((payment) => payment.type === PaymentTypes.rent)
+          ?.reduce((acc, payment) => acc + parseFloat(payment.price), 0);
   
           const fineSum = monthData
-              .filter((payment) => payment.type === PaymentTypes.fine)
-              .reduce((acc, payment) => acc + parseFloat(payment.price), 0);
+              ?.filter((payment) => payment.type === PaymentTypes.fine)
+              ?.reduce((acc, payment) => acc + parseFloat(payment.price), 0);
   
-          setMonthRentCost(rentSum);
-          setMonthFineCost(fineSum);
+          setMonthRentCost(rentSum ?? '0');
+          setMonthFineCost(fineSum ?? '0');
     };
 
     useEffect(() => {
@@ -80,6 +82,15 @@ const UserPanel = () => {
         if(!paymentHistoryMonths) return;
         sumMonthPrice(paymentHistoryMonths[0]);
     }, [paymentHistoryMonths]);
+
+    useEffect(() => {
+        const getPreviewImage = async () => {
+            const previewImage = await getImage(currentCar?.preview_image ?? '');
+            setCarPreviewImage(previewImage);
+        };
+
+        getPreviewImage();
+    }, [currentCar?.preview_image]);
 
     const endRent = async () => {
         if(!currentRent?.car_id || !currentCar?.id) return;
@@ -162,7 +173,7 @@ const UserPanel = () => {
                 <div className='w-1/3'>
                     <div className='w-3/4 bg-primary p-4 shadow-[8px_6px_3px_2px_rgba(32,81,214,0.38)]'>
                         <h3 className='font-semibold text-2xl mb-4 text-white'>Current rental</h3>
-                        <img src='https://placehold.co/400x150' alt='car-image' />
+                        <img className='w-[400px]' src={carPreviewImage} alt='car-image' />
                         {
                             currentRent?.car_id && (
                                 <div>
@@ -181,7 +192,11 @@ const UserPanel = () => {
                             className='py-2 px-6 border border-gray-300 rounded-lg bg-gray-50 font-medium'
                             onChange={changePaymentHistory}
                         >
-                            {paymentHistoryMonthsOptions}
+                            {
+                                paymentHistoryMonthsOptions?.length === 0 ? (
+                                    <option>No months</option>
+                                ) : paymentHistoryMonthsOptions
+                            }
                         </select>
                     </div>
                     <div className='flex justify-between border-b-2 border-gray-200 mb-6'>

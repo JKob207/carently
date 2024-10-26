@@ -96,8 +96,8 @@ const FirstLogin = () => {
     return (
         <main className='h-screen flex flex-row'>
             <section className='first-login-hero-section w-1/3 flex flex-col justify-end'>
-                <div className='bg-primary p-4 rounded-tr-full'>
-                    <img src='https://placehold.co/300' alt='logo' />
+                <div className='bg-primary pl-4 rounded-tr-full'>
+                    <img src='https://firebasestorage.googleapis.com/v0/b/carently-94153.appspot.com/o/assets%2Ffirst-login-car.png?alt=media&token=74c2ec26-3af8-4007-b897-ca0d3ab47d1a' alt='first-login' />
                 </div>
             </section>
             <section className='w-2/3 p-9'>

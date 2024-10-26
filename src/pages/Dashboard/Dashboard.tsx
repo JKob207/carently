@@ -22,13 +22,12 @@ const Dashboard = () => {
             <div className='hero-section flex items-center justify-around'>
                 <div>
                     <h2 className='font-medium text-5xl text-center'>
-                        Lorem ipsum <span className='text-secondary'>dolor</span> <br/>
-                        sit amet consectetur <br/>
-                        adipiscing <span className='text-secondary'>elit</span>
+                        Rent. Drive. <span className='text-secondary'>Explore.</span> <br/>
+                        Anytime, Anywhere.
                     </h2>
                 </div>
                 <div>
-                    <img src='https://placehold.co/300' alt='Hero' />
+                    <img className='p-4' src='https://firebasestorage.googleapis.com/v0/b/carently-94153.appspot.com/o/assets%2FHero.png?alt=media&token=e056da04-b88c-4c97-b3d3-95c9f59c2a4f00' alt='Hero' />
                 </div>
             </div>
             <div className='p-4 grid gap-6 md:grid-cols-3 w-3/4 relative left-[15%] shadow-2xl '>

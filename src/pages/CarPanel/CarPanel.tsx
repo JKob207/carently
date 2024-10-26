@@ -10,6 +10,7 @@ import { getCar } from '../../reducers/car-reducer-slice';
 import { getUser, setUser } from '../../reducers/user-reducer-slice';
 import { checkIfCarAvailable, getCarByName } from '../../services/carsData';
 import { addRentCar } from '../../services/rentals';
+import { getImage } from '../../services/storageAPI';
 import { updateUser } from '../../services/userData';
 import { ErrorTypes, Rental } from '../../types';
 import { getMinEndDate } from '../../utils/dateUtils';
@@ -30,6 +31,12 @@ const CarPanel = () => {
         title: '',
         message: ''
     });
+    const [carSettingsImages, setCarSettingsImages] = useState({
+        brand: 'https://placehold.co/50',
+        type: 'https://placehold.co/50',
+        gearbox: 'https://placehold.co/50'
+    });
+    const [carPreviewImage, setCarPreviewImage] = useState('https://placehold.co/600x300');
 
     const rentingButton = useRef<HTMLButtonElement>(null);
 
@@ -43,6 +50,31 @@ const CarPanel = () => {
 
         checkCarData();
     }, []);
+
+    useEffect(() => {
+        const getSettingImages = async () => {
+            const brandImage = await getImage(`/assets/${car.brand}_logo.png`);
+            const typeImage = await getImage(`/assets/${car.type}_icon.png`);
+            const gearboxImage = await getImage(`/assets/${car.gearbox}_icon.png`);
+
+            setCarSettingsImages({
+                brand: brandImage,
+                type: typeImage,
+                gearbox: gearboxImage
+            });
+        };
+
+        getSettingImages();
+    }, [car]);
+
+    useEffect(() => {
+        const getPreviewImage = async () => {
+            const previewImage = await getImage(car.preview_image ?? '');
+            setCarPreviewImage(previewImage);
+        };
+
+        getPreviewImage();
+    }, [car.preview_image]);
 
     useEffect(() => {
         if (rentingButton?.current) {
@@ -113,7 +145,7 @@ const CarPanel = () => {
         <div className='py-6 mx-4'>
             <h1 className='text-2xl font-bold py-4'>{car.name}</h1>
             <div className='upper-panel grid grid-cols-3 gap-6'>
-                <img src='https://placehold.co/600x300' alt='car-full' />
+                <img src={carPreviewImage} alt='car-full' />
                 <div className='car-info-panel'>
                     <div className='flex justify-between border-b-2 my-4'>
                         <p className='font-light'>Mileage</p>
@@ -144,19 +176,19 @@ const CarPanel = () => {
                     <h2 className='font-medium text-xl'>Car type</h2>
                     <div className='grid grid-cols-2 grid-rows-2 gap-8 mt-4'>
                         <div className='bg-primary p-4 text-white rounded-lg flex flex-col items-center'>
-                            <img src='https://placehold.co/50' alt='car-brand' />
+                            <img src={carSettingsImages.brand} alt='car-brand' />
                             <p className='font-semibold'>{car.brand}</p>
                         </div>
                         <div className='bg-primary p-4 text-white rounded-lg flex flex-col items-center'>
-                            <img src='https://placehold.co/50' alt='car-brand' />
+                            <img src={carSettingsImages.type} alt='car-type' />
                             <p className='font-semibold'>{car.type}</p>
                         </div>
                         <div className='bg-primary p-4 text-white rounded-lg flex flex-col items-center'>
-                            <img src='https://placehold.co/50' alt='car-brand' />
+                            <img src={carSettingsImages.gearbox} alt='car-gearbox' />
                             <p className='font-semibold'>{car.gearbox}</p>
                         </div>
                         <div className='bg-primary p-4 text-white rounded-lg flex flex-col items-center'>
-                            <img src='https://placehold.co/50' alt='car-brand' />
+                            <img src='https://firebasestorage.googleapis.com/v0/b/carently-94153.appspot.com/o/assets%2Frating.png?alt=media&token=0b2c9101-1052-4a98-a4ad-85e24a30f394' alt='rating' />
                             <p className='font-semibold'>{car.rating}</p>
                         </div>
                     </div>
