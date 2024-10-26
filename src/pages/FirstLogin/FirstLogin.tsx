@@ -9,6 +9,7 @@ import { z, ZodType } from 'zod';
 import Alert from '../../components/Alert';
 import { AlertTypes } from '../../enums';
 import { getUser, setExtraLoginUserData } from '../../reducers/user-reducer-slice';
+import { uploadImage } from '../../services/storageAPI';
 import { updateUser } from '../../services/userData';
 import { ErrorTypes, FirstLoginData } from '../../types';
 
@@ -17,6 +18,7 @@ const FirstLogin = () => {
     const user = useSelector(getUser);
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [avatarFile, setAvatarFile] = useState<File>();
 
     const [errorAlert, setErrorAlert] = useState<ErrorTypes>({
         isOpen: false,
@@ -48,8 +50,9 @@ const FirstLogin = () => {
             };
             try {
                 const updateResult = await updateUser(updatedUserData.uid, updatedUserData);
-                if(updateResult) {
-                    dispatch(setExtraLoginUserData(data));
+                const updateAvatar = await uploadImage(avatarFile, updatedUserData);
+                if(updateResult && updateAvatar) {
+                    dispatch(setExtraLoginUserData({...data, avatar: updateAvatar }));
                     setErrorAlert({
                         isOpen: false,
                         type: AlertTypes.danger,
@@ -92,6 +95,10 @@ const FirstLogin = () => {
     useEffect(() => {
         if(user.name) navigate('/dashboard');
     }, []);
+
+    const handleChangeFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if(e !== null) setAvatarFile(e?.target?.files?.[0]);
+    };
 
     return (
         <main className='h-screen flex flex-row'>
@@ -155,6 +162,16 @@ const FirstLogin = () => {
                                 {...register('phone')} 
                             />
                             {errors.phone && <span>{errors.phone.message}</span>}
+                        </div>
+                        <div className='first-login-avatar w-full block text-sm font-medium leading-6 text-dark pt-2'>
+                            <label className='block text-sm font-light leading-6 text-dark' htmlFor='avatar'>Upload avatar</label>
+                            <input 
+                                id='avatar'
+                                type='file'
+                                className='block w-full rounded-md border-0 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 sm:text-sm sm:leading-6'
+                                name='avatar'
+                                onChange={handleChangeFileUpload}
+                            />
                         </div>
                     </div>
                     <input 

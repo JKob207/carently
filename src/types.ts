@@ -3,20 +3,21 @@ import { GeoPoint } from 'firebase/firestore';
 import { AlertTypes, PaymentTypes } from './enums';
 
 type LoginData = {
-    email: string;
-    password: string;
+    email: string,
+    password: string,
 };
 
 type RegisterData = LoginData & {
-    confirmPassword: string;
-    terms: boolean;
+    confirmPassword: string,
+    terms: boolean,
 };
 
 type FirstLoginData = {
-    name: string;
-    surname: string;
-    company?: string;
-    phone?: string;
+    name: string,
+    surname: string,
+    company?: string,
+    phone?: string,
+    avatar?: string,
 }
 
 type ErrorTypes = {
@@ -38,6 +39,7 @@ type User = {
     favourite_cars: string[],
     payment_card_id: string,
     payment_info_id: string,
+    avatar: string,
 };
 
 type Car = {
