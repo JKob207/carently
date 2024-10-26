@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { FirebaseError } from 'firebase/app';
 import { z,ZodType } from 'zod';
 
+import GoogleIcon from '../../../public/Google.svg';
 import Alert from '../../components/Alert';
 import { AlertTypes } from '../../enums';
 import { loginUser } from '../../services/authorization';
@@ -33,14 +34,13 @@ const Login = () => {
         reset,
     } = useForm<LoginData>({resolver: zodResolver(loginSchema)});
 
-    const submitLogin = async (data: LoginData) => {
+    const submitLogin = async (data: LoginData, method: string) => {
         const result = loginSchema.safeParse(data);
-        if(result.success)
+        if(result.success || method === 'GOOGLE')
             {
                 try {
-                    const loginResult = await loginUser(data.email, data.password);
+                    const loginResult = await loginUser(data.email, data.password, method);
                     if(loginResult?.user?.uid) {
-                        console.log('User login');
                         setErrorAlert({
                             isOpen: false,
                             type: AlertTypes.danger,
@@ -85,7 +85,7 @@ const Login = () => {
                 />
                 <form 
                     className='login-form flex flex-col items-center'
-                    onSubmit={handleSubmit(submitLogin)}
+                    onSubmit={handleSubmit((data: LoginData) => submitLogin(data, 'EMAIL'))}
                 >
                     <div className='login-email-box w-full block text-sm font-medium leading-6 text-dark pt-2'>
                     <label htmlFor='email'>Email</label>
@@ -123,15 +123,12 @@ const Login = () => {
                             <span className='flex-shrink mx-4 text-gray-600'>OR</span>
                             <div className='flex-grow border-t border-gray-300'></div>
                         </div>
-                        <div className='login-external-methods'>
+                        <div className='login-external-methods w-1/2'>
                             <button
-                                className='w-full my-1 border-secondary border-2 py-2 font-medium text-md rounded-md'
+                                className='w-full my-1 border-secondary border-2 py-2 font-medium text-md rounded-md flex justify-evenly'
                                 type='button'
-                            >Continue with Google</button>
-                            <button
-                                className='w-full my-1 border-secondary border-2 py-2 font-medium text-md rounded-md'
-                                type='button'
-                            >Continue with Microsoft</button>
+                                onClick={() => submitLogin({email: '', password: ''}, 'GOOGLE')}
+                            ><img src={GoogleIcon} alt='Google icon'/>Continue with Google</button>
                         </div>
                     </div>
                 </form>

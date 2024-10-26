@@ -17,6 +17,7 @@ export const userSlice = createSlice({
         favourite_cars: [],
         payment_card_id: '',
         payment_info_id: '',
+        avatar: '',
     } as User,
     reducers: {
         setUser(state, { payload }: PayloadAction<User>) {
@@ -31,12 +32,14 @@ export const userSlice = createSlice({
             state.favourite_cars = payload.favourite_cars;
             state.payment_card_id = payload.payment_card_id;
             state.payment_info_id = payload.payment_info_id;
+            state.avatar = payload.avatar;
         },
         setExtraLoginUserData(state, {payload}: PayloadAction<FirstLoginData>) {
             state.name = payload.name;
             state.surname = payload.surname;
             state.company = payload.company ?? '';
             state.phone = payload.phone ?? '';
+            state.avatar = payload.avatar ?? '';
         },
     },
 });
@@ -55,6 +58,7 @@ export const getUser = (state: RootState): User => ({
     favourite_cars: state.user.favourite_cars,
     payment_card_id: state.user.payment_card_id,
     payment_info_id: state.user.payment_info_id,
+    avatar: state.user.avatar,
 });
 
 export default userSlice.reducer;

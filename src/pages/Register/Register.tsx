@@ -153,16 +153,6 @@ const Register = () => {
                             <span className='flex-shrink mx-4 text-gray-600'>OR</span>
                             <div className='flex-grow border-t border-gray-300'></div>
                         </div>
-                        <div className='register-external-methods'>
-                            <button
-                                className='w-full my-1 border-secondary border-2 py-2 font-medium text-md rounded-md'
-                                type='button'
-                            >Continue with Google</button>
-                            <button
-                                className='w-full my-1 border-secondary border-2 py-2 font-medium text-md rounded-md'
-                                type='button'
-                            >Continue with Microsoft</button>
-                        </div>
                     </div>
                 </form>
                 <h4 className='text-center'>Already have an account? <Link to='/' className='font-bold text-primary'>Login here</Link></h4>

@@ -8,7 +8,7 @@ import { getUser } from '../../reducers/user-reducer-slice';
 import { getCarById } from '../../services/carsData';
 import { addPayment, getPaymentHistoryForUserById } from '../../services/payments';
 import { getRentalById } from '../../services/rentals';
-import { getImage } from '../../services/storageAPI';
+import { getAvatar, getImage } from '../../services/storageAPI';
 import { updateUser } from '../../services/userData';
 import { Car, GroupedPayments, Payment, Rental, User } from '../../types';
 import { formatDate } from '../../utils/dateUtils';
@@ -23,6 +23,7 @@ const UserPanel = () => {
     const [monthRentCost, setMonthRentCost] = useState(0);
     const [monthFineCost, setMonthFineCost] = useState(0);
     const [carPreviewImage, setCarPreviewImage] = useState('https://firebasestorage.googleapis.com/v0/b/carently-94153.appspot.com/o/assets%2Fempty_current.png?alt=media&token=900bdd85-63ee-4bdb-89f1-93990d8fb1f1');
+    const [avatar, setAvatar] = useState('https://placehold.co/45');
 
     const navigate = useNavigate();
 
@@ -58,6 +59,19 @@ const UserPanel = () => {
         if(userData?.current_rent_id) {
             getCurrentRental();
         }
+    }, []);
+
+    useEffect(() => {
+        const getAvatarUrl = async () => {
+            try {
+                const avatar = await getAvatar(userData.avatar);
+                setAvatar(avatar);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+
+        getAvatarUrl();
     }, []);
 
     useEffect(() => {
@@ -163,7 +177,7 @@ const UserPanel = () => {
                 <div className='w-1/3'>
                     <h3 className='font-semibold text-2xl'>Customer info</h3>
                     <div className='flex py-8 items-center'>
-                        <img className='rounded-full' src='https://placehold.co/150' alt='user-avatar' />
+                        <img className='rounded-full w-[150px]' src={avatar} alt='user-avatar' />
                         <div className='ml-8 text-center'>
                             <p className='text-xl'>{userData.name} {userData.surname}</p>
                             <p className='text-lg'>{userData.company}</p>

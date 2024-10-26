@@ -1,10 +1,10 @@
 import { FirebaseError } from 'firebase/app';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut,UserCredential } from 'firebase/auth';
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup, signOut,UserCredential } from 'firebase/auth';
 
 import { User } from '../types';
 import generateClientId from '../utils/generateClientId';
 
-import { auth } from './firebase-config';
+import { auth, googleProvider } from './firebase-config';
 import { addUser } from './userData';
 
 const createUserData = async (userCredential: UserCredential): Promise<User> => {
@@ -20,6 +20,7 @@ const createUserData = async (userCredential: UserCredential): Promise<User> => 
         favourite_cars: [],
         payment_card_id: '',
         payment_info_id: '',
+        avatar: '',
     };
 
     // Saving user to Firebase collection
@@ -44,7 +45,26 @@ export const registerUser = async (email: string, password: string): Promise<Use
     }
 };
 
-export const loginUser = async (email: string, password: string): Promise<UserCredential> => {
+const signInWithGoogle = async () => {
+    try {
+        const userCredential = await signInWithPopup(auth, googleProvider);
+
+        if(!userCredential) throw Error('User credential missing!');
+
+        createUserData(userCredential);
+
+        return userCredential;
+    } catch (error) {
+        if (error instanceof FirebaseError) {
+            console.error('Authentication error:', error.message);
+            return {} as UserCredential;
+        }
+        throw {} as UserCredential;
+    }
+};
+
+export const loginUser = async (email: string, password: string, method: string): Promise<UserCredential> => {
+    if(method === 'GOOGLE') return signInWithGoogle();
     return await signInWithEmailAndPassword(auth, email, password);
 };
 
